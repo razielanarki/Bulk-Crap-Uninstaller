@@ -127,13 +127,18 @@ namespace StoreAppHelper
 
         private static string ExtractDisplayIcon(string appDir, string iconDir)
         {
-            var logo = Path.Combine(appDir, iconDir);
-            if (File.Exists(logo))
-                return logo;
+            var defaultLogo = Path.Combine(appDir, iconDir);
+            if (File.Exists(defaultLogo))
+                return defaultLogo;
 
-            logo = Path.Combine(appDir, Path.ChangeExtension(logo, "scale-100.png"));
-            if (File.Exists(logo))
-                return logo;
+            string[] extensions = { "scale-100.png", "scale-200.png", "scale-300.png", "scale-400.png" };
+
+            foreach (var extension in extensions)
+            {
+                var logo = Path.Combine(appDir, Path.ChangeExtension(defaultLogo, extension));
+                if (File.Exists(logo))
+                    return logo;
+            }
 
             var localized = Path.Combine(Path.Combine(appDir, "en-us"), iconDir);
             localized = Path.Combine(appDir, Path.ChangeExtension(localized, "scale-100.png"));
